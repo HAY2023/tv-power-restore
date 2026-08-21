@@ -42,14 +42,9 @@ jobs:
         run: |
           mkdir -p release_binaries
           
-          # Copy ESP32 WROOM binaries
-          cp .pio/build/esp32dev/firmware.bin release_binaries/esp32-wroom-firmware.bin
-          cp .pio/build/esp32dev/bootloader.bin release_binaries/esp32-wroom-bootloader.bin
-          cp .pio/build/esp32dev/partitions.bin release_binaries/esp32-wroom-partitions.bin
-          
           # Generate single merged all-in-one binary for ESP32 WROOM (flash at offset 0x0)
           esptool.py --chip esp32 merge_bin \
-            -o release_binaries/esp32-wroom-complete-flash-offset-0x0.bin \
+            -o release_binaries/ESP32_WROOM_Firmware.bin \
             --flash_mode dio \
             --flash_freq 40m \
             --flash_size 4MB \
@@ -57,14 +52,9 @@ jobs:
             0x8000 .pio/build/esp32dev/partitions.bin \
             0x10000 .pio/build/esp32dev/firmware.bin
           
-          # Copy ESP32-C3 binaries
-          cp .pio/build/esp32c3/firmware.bin release_binaries/esp32-c3-firmware.bin
-          cp .pio/build/esp32c3/bootloader.bin release_binaries/esp32-c3-bootloader.bin
-          cp .pio/build/esp32c3/partitions.bin release_binaries/esp32-c3-partitions.bin
-          
           # Generate single merged all-in-one binary for ESP32-C3 (flash at offset 0x0)
           esptool.py --chip esp32c3 merge_bin \
-            -o release_binaries/esp32-c3-complete-flash-offset-0x0.bin \
+            -o release_binaries/ESP32_C3_Firmware.bin \
             --flash_mode dio \
             --flash_freq 40m \
             --flash_size 4MB \
@@ -72,22 +62,27 @@ jobs:
             0x8000 .pio/build/esp32c3/partitions.bin \
             0x10000 .pio/build/esp32c3/firmware.bin
 
+          # Copy batch scripts for flashing
+          cp حرق_السوفتوير.bat release_binaries/
+          cp flash.bat release_binaries/
+          
+          # Create a ZIP archive for the release
+          cd release_binaries
+          zip -r ../TV_Power_Restore_Firmware.zip *
+          cd ..
+
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: esp32-hdmi-cec-firmware-binaries
-          path: release_binaries/
+          name: TV_Power_Restore_Firmware
+          path: TV_Power_Restore_Firmware.zip
           retention-days: 30
 
       - name: Create GitHub Release (On Git Tag)
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
-          files: |
-            release_binaries/esp32-wroom-firmware.bin
-            release_binaries/esp32-wroom-complete-flash-offset-0x0.bin
-            release_binaries/esp32-c3-firmware.bin
-            release_binaries/esp32-c3-complete-flash-offset-0x0.bin
+          files: TV_Power_Restore_Firmware.zip
           generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
