@@ -3,11 +3,14 @@
 
 <div align="center">
 
-[![Version: 1.0.0](https://img.shields.io/badge/الإصدار-v1.0.0-blueviolet.svg)](https://github.com/HAY2023/tv-power-restore/releases/tag/v1.0.0)
-[![License: MIT](https://img.shields.io/badge/الترخيص-MIT-blue.svg)](LICENSE)
+[![GitHub Release](https://img.shields.io/github/v/release/HAY2023/tv-power-restore?color=blueviolet&label=الإصدار)](https://github.com/HAY2023/tv-power-restore/releases/latest)
+[![GitHub All Releases](https://img.shields.io/github/downloads/HAY2023/tv-power-restore/total?color=blue&label=التحميلات)](https://github.com/HAY2023/tv-power-restore/releases)
+[![License: MIT](https://img.shields.io/badge/الترخيص-MIT-lightgrey.svg)](LICENSE)
 [![Build Firmware](https://github.com/HAY2023/tv-power-restore/actions/workflows/build.yml/badge.svg)](https://github.com/HAY2023/tv-power-restore/actions/workflows/build.yml)
-[![اللوحة الأساسية](https://img.shields.io/badge/اللوحة%20الأساسية-ESP32%20WROOM-green.svg)](#-قائمة-المكونات-والقطع-المطلوبة-bom)
+<br>
+[![المتحكمات المدعومة](https://img.shields.io/badge/المتحكمات-ESP32%20%7C%20ESP8266%20%7C%20Arduino%20%7C%20Pico-green.svg)](#-المتحكمات-المدعومة)
 [![أداة الحرق لويندوز](https://img.shields.io/badge/أداة%20الحرق-ويندوز%20.bat-brightgreen.svg)](#-الطريقة-الثانية-أداة-ويندوز-السريعة-بنقرة-واحدة-ملف-bat-التفاعلي)
+</div>
 
 ## ✨ الميزات الأساسية
 - **تشغيل التلفزيون تلقائياً** فور عودة الكهرباء باستخدام بروتوكول HDMI-CEC.
