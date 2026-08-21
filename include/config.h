@@ -10,6 +10,10 @@
 
 #define FIRMWARE_VERSION "1.1.0"
 
+#ifdef BOARD_NAME
+#undef BOARD_NAME
+#endif
+
 #if defined(BOARD_ESP32_C3)
     // Secondary Target: ESP32-C3 Super Mini
     #define DEFAULT_CEC_PIN      3   // GPIO3

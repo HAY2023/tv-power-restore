@@ -77,8 +77,12 @@ jobs:
           cp .pio/build/uno/firmware.hex release_binaries/Arduino_Uno_Firmware.hex
           cp .pio/build/nanoatmega328/firmware.hex release_binaries/Arduino_Nano_Firmware.hex
 
-          # Pico (UF2 file)
-          cp .pio/build/pico/firmware.uf2 release_binaries/RaspberryPi_Pico_Firmware.uf2
+          # Pico (UF2 or bin)
+          if [ -f .pio/build/pico/firmware.uf2 ]; then
+            cp .pio/build/pico/firmware.uf2 release_binaries/RaspberryPi_Pico_Firmware.uf2
+          elif [ -f .pio/build/pico/firmware.bin ]; then
+            cp .pio/build/pico/firmware.bin release_binaries/RaspberryPi_Pico_Firmware.bin
+          fi
 
           # Copy batch scripts for flashing
           cp حرق_السوفتوير.bat release_binaries/
@@ -99,17 +103,7 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
-          files: |
-            release_binaries/ESP32_WROOM_Firmware.bin
-            release_binaries/ESP32_C3_Firmware.bin
-            release_binaries/ESP32_S2_Firmware.bin
-            release_binaries/ESP32_S3_Firmware.bin
-            release_binaries/ESP8266_Firmware.bin
-            release_binaries/Arduino_Uno_Firmware.hex
-            release_binaries/Arduino_Nano_Firmware.hex
-            release_binaries/RaspberryPi_Pico_Firmware.uf2
-            release_binaries/حرق_السوفتوير.bat
-            release_binaries/flash.bat
+          files: release_binaries/*
           generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

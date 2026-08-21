@@ -13,10 +13,6 @@ bool RtcStorage::begin() {
     DEBUG_PRINTF("[RTC] Initializing I2C bus (SDA: GPIO%d, SCL: GPIO%d)...\n", _sdaPin, _sclPin);
 #if defined(ESP32) || defined(ESP8266)
     Wire.begin(_sdaPin, _sclPin);
-#elif defined(ARDUINO_ARCH_RP2040)
-    Wire.setSDA(_sdaPin);
-    Wire.setSCL(_sclPin);
-    Wire.begin();
 #else
     Wire.begin();
 #endif
