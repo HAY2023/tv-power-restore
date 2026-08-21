@@ -89,7 +89,7 @@
 
 ## ⚡ طرق برمجة الشريحة (خطوة بخطوة للمبتدئين)
 
-### 🌟 الطريقة الأولى: البرمجة المباشرة عبر المتصفح (الأسهل بدون برامج أو أكواد)
+### 🌟 الطريقة الأولى: البرمجة المباشرة عبر المتصفح (بدون برامج أو أكواد)
 
 هذه هي أسهل وأسرع طريقة لا تتطلب تثبيت أي برامج أو فتح سطر الأوامر:
 
@@ -98,7 +98,6 @@
 3. توجه إلى أحد مواقع حرق السوفتوير المعتمدة:
    - [موقع Adafruit WebSerial ESPTool](https://adafruit.github.io/Adafruit_WebSerial_ESPTool/) أو
    - [موقع ESP Web Tools](https://esphome.github.io/esp-web-tools/)
-   - أو افتح الملف المرفق في المشروع: [`tools/web_flasher.html`](file:///h:/tv-power-restore/tools/web_flasher.html).
 4. اضغط على زر **Connect** ستظهر لك نافذة منبثقة، اختر منها منفذ الـ COM الخاص بالشريحة ثم اضغط **Connect**.
 5. اختر ملف الفلاش المدمج الذي قمت بتحميله: `esp32-wroom-complete-flash-offset-0x0.bin`.
 6. تأكد من ضبط خانة العنوان (Offset) على: `0x0` (أو `0x0000`).
@@ -107,16 +106,18 @@
 
 ---
 
-### 🖥️ الطريقة الثانية: تطبيق ويندوز المباشر (Windows Flasher Tool)
+### 🖥️ الطريقة الثانية: أداة ويندوز السريعة بنقرة واحدة (ملف `.bat` التفاعلي)
 
-إذا كنت تستخدم نظام ويندوز وتريد تطبيقاً رسومياً جاهزاً يعمل بضغطة زر واحدة:
+إذا كنت تستخدم نظام ويندوز، يمكنك برمجة الشريحة بضغطة زر واحدة بدون أي خطوات معقدة:
 
-1. ادخل إلى مجلد `tools` في المشروع.
-2. اضغط مرتين على الملف: **[`حرق_السوفتوير_ويندوز.bat`](file:///h:/tv-power-restore/tools/حرق_السوفتوير_ويندوز.bat)** (أو `flash_windows.bat`).
-3. ستفتح لك واجهة رسومية جميلة وسهلة:
-   - يتعرف التطبيق تلقائياً على منفذ الـ COM للشريحة.
-   - اختر نوع اللوحة (**ESP32 WROOM** أو **ESP32-C3**).
-   - اضغط على زر **🔥 بدء حرق السوفتوير على الشريحة (Flash)** وسيقوم التطبيق بكل شيء تلقائياً!
+1. صِل شريحة الـ ESP32 بالكمبيوتر عبر كابل USB.
+2. اضغط مرتين (Double Click) على الملف المباشر في المجلد الرئيسي:
+   👉 **[`حرق_السوفتوير.bat`](file:///h:/tv-power-restore/حرق_السوفتوير.bat)** (أو `flash.bat`).
+3. ستقوم الأداة تلقائياً بما يلي:
+   - **اكتشاف منفذ الـ COM للشريحة تلقائياً**.
+   - إعطاؤك قائمة تفاعلية لاختيار الشريحة (`ESP32 WROOM` أو `ESP32-C3`).
+   - حرق السوفتوير مع إعادة المحاولة الذكية بالسرعة المستقرة إذا حدث أي انقطاع.
+   - خيار إضافي لمسح ذاكرة الشريحة بالكامل (Full Chip Erase).
 
 ---
 
@@ -220,10 +221,8 @@ Precompiled `.bin` files and merged flash images are generated automatically by 
 - [`esp32-wroom-complete-flash-offset-0x0.bin`](https://github.com/HAY2023/tv-power-restore/releases) (Flash at `0x0`)
 - [`esp32-wroom-firmware.bin`](https://github.com/HAY2023/tv-power-restore/releases) (Flash at `0x10000`)
 
-### Easy Windows Flasher (GUI)
-1. Navigate to the `tools/` folder.
-2. Double-click **[`flash_windows.bat`](file:///h:/tv-power-restore/tools/flash_windows.bat)** to launch the graphical flasher.
-3. Select your COM port, board type, and click **Flash**!
+### 1-Click Windows Flasher (.bat)
+Simply double-click **[`flash.bat`](file:///h:/tv-power-restore/flash.bat)** (or `حرق_السوفتوير.bat`) in the root directory to auto-detect your COM port and flash your ESP32 board interactively!
 
 ### Quick Flash (Terminal)
 ```bash
