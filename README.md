@@ -51,9 +51,13 @@
 
 ---
 
-## 🔌 مخطط التوصيل والأسلاك
+## 🔌 مخطط التوصيل والأسلاك / Wiring & Connections
 
-![مخطط التوصيل](diagrams/wiring.svg)
+> 🖼️ **صورة 1 / Image 1: Hardware Wiring (توصيل الهاردوير)**
+> 
+> *[ضع صورة المشروع بعد توصيل الأسلاك هنا / Place your actual wiring photo here]*
+> 
+> `![صورة 1 / Image 1](placeholder1.jpg)`
 
 ### 1. جدول توصيل منفذ الـ HDMI مع شريحة ESP32 WROOM (الافتراضية)
 
@@ -81,10 +85,16 @@
 
 لا تحتاج لكتابة أي كود أو تنزيل برامج برمجة معقدة! يقوم النظام تلقائياً بإنشاء ملفات السوفتوير الجاهزة للرفع بصيغة `.bin`:
 
-| اللوحة | ملف الفلاش المدمج الشامل (موصى به) | ملف السوفتوير الفردي |
-| :--- | :--- | :--- |
-| **ESP32 WROOM (DevKit v1)** *(الأساسية)* | [`esp32-wroom-complete-flash-offset-0x0.bin`](https://github.com/HAY2023/tv-power-restore/releases) *(يُحرق عند العنوان `0x0`)* | [`esp32-wroom-firmware.bin`](https://github.com/HAY2023/tv-power-restore/releases) *(يُحرق عند العنوان `0x10000`)* |
-| **ESP32-C3 Super Mini** *(الاختيارية)* | [`esp32-c3-complete-flash-offset-0x0.bin`](https://github.com/HAY2023/tv-power-restore/releases) *(يُحرق عند العنوان `0x0`)* | [`esp32-c3-firmware.bin`](https://github.com/HAY2023/tv-power-restore/releases) *(يُحرق عند العنوان `0x10000`)* |
+| اللوحة / Board | ملف الفلاش المدمج / Firmware File |
+| :--- | :--- |
+| **ESP32 WROOM (DevKit v1)** *(الأساسية)* | [`ESP32_WROOM_Firmware.bin`](https://github.com/HAY2023/tv-power-restore/releases/latest) |
+| **ESP32-C3 Super Mini** *(الاختيارية)* | [`ESP32_C3_Firmware.bin`](https://github.com/HAY2023/tv-power-restore/releases/latest) |
+
+> 🖼️ **صورة 2 / Image 2: Download Releases (تحميل الملفات الجاهزة)**
+> 
+> *[ضع صورة شاشة لصفحة تحميل الملفات من جيت هاب هنا / Place a screenshot of the GitHub Releases page here]*
+> 
+> `![صورة 2 / Image 2](placeholder2.jpg)`
 
 ---
 
@@ -100,7 +110,7 @@
    - [موقع Adafruit WebSerial ESPTool](https://adafruit.github.io/Adafruit_WebSerial_ESPTool/) أو
    - [موقع ESP Web Tools](https://esphome.github.io/esp-web-tools/)
 4. اضغط على زر **Connect** ستظهر لك نافذة منبثقة، اختر منها منفذ الـ COM الخاص بالشريحة ثم اضغط **Connect**.
-5. اختر ملف الفلاش المدمج الذي قمت بتحميله: `esp32-wroom-complete-flash-offset-0x0.bin`.
+5. اختر ملف الفلاش المدمج الذي قمت بتحميله: `ESP32_WROOM_Firmware.bin`.
 6. تأكد من ضبط خانة العنوان (Offset) على: `0x0` (أو `0x0000`).
 7. اضغط على زر **Program** أو **Flash** وانتظر حتى يصل الشريط إلى 100%.
 8. **مبروك!** تمت برمجة القطعة بنجاح، يمكنك الآن فصلها وتركيبها في التلفزيون.
@@ -119,6 +129,12 @@
    - إعطاؤك قائمة تفاعلية لاختيار الشريحة (`ESP32 WROOM` أو `ESP32-C3`).
    - حرق السوفتوير مع إعادة المحاولة الذكية بالسرعة المستقرة إذا حدث أي انقطاع.
    - خيار إضافي لمسح ذاكرة الشريحة بالكامل (Full Chip Erase).
+
+> 🖼️ **صورة 3 / Image 3: Flasher Tool (أداة الحرق)**
+> 
+> *[ضع صورة لشاشة الأداة .bat أثناء عملية الحرق هنا / Place a screenshot of the .bat flashing tool here]*
+> 
+> `![صورة 3 / Image 3](placeholder3.jpg)`
 
 ---
 
@@ -146,19 +162,14 @@ pip install esptool
 
 - **أمر حرق الملف المدمج الشامل (موصى به عند العنوان `0x0`)**:
   ```bash
-  esptool.py --chip esp32 --port COM3 --baud 460800 write_flash 0x0 esp32-wroom-complete-flash-offset-0x0.bin
-  ```
-
-- **أمر حرق السوفتوير فقط عند العنوان `0x10000`**:
-  ```bash
-  esptool.py --chip esp32 --port COM3 --baud 460800 write_flash 0x10000 esp32-wroom-firmware.bin
+  esptool.py --chip esp32 --port COM3 --baud 460800 write_flash 0x0 ESP32_WROOM_Firmware.bin
   ```
 
 > [!TIP]
 > **نصائح هامة عند البرمجة:**
 > - إذا ظهرت رسالة `A fatal error occurred: Failed to connect`: اضغط باستمرار على زر **BOOT** الموجود على شريحة الـ ESP32 أثناء تنفيذ الأمر وافلت الزر عند بدء التحميل.
 > - إذا انقطع التحميل في المنتصف، جرب تقليل السرعة إلى `115200`:
->   `esptool.py --chip esp32 --port COM3 --baud 115200 write_flash 0x0 esp32-wroom-complete-flash-offset-0x0.bin`
+>   `esptool.py --chip esp32 --port COM3 --baud 115200 write_flash 0x0 ESP32_WROOM_Firmware.bin`
 > - إذا لم يظهر منفذ الـ COM في إدارة الأجهزة، قم بتثبيت تعريف [شريحة CH340](https://sparks.gogo.co.nz/ch340.html) أو [شريحة CP2102](https://www.silabs.com/developers/usb-to-uart-bridge-vcp-drivers).
 
 ---
@@ -219,8 +230,8 @@ This project turns on Google TV / Smart TVs and activates the HDMI source automa
 
 ### Precompiled Binary Releases
 Precompiled `.bin` files and merged flash images are generated automatically by GitHub Actions on every commit:
-- [`esp32-wroom-complete-flash-offset-0x0.bin`](https://github.com/HAY2023/tv-power-restore/releases) (Flash at `0x0`)
-- [`esp32-wroom-firmware.bin`](https://github.com/HAY2023/tv-power-restore/releases) (Flash at `0x10000`)
+- [`ESP32_WROOM_Firmware.bin`](https://github.com/HAY2023/tv-power-restore/releases/latest) (Flash at `0x0`)
+- [`ESP32_C3_Firmware.bin`](https://github.com/HAY2023/tv-power-restore/releases/latest) (Flash at `0x0`)
 
 ### 1-Click Windows Flasher (.bat)
 Simply double-click **[`flash.bat`](file:///h:/tv-power-restore/flash.bat)** (or `حرق_السوفتوير.bat`) in the root directory to auto-detect your COM port and flash your ESP32 board interactively!
@@ -231,7 +242,7 @@ Simply double-click **[`flash.bat`](file:///h:/tv-power-restore/flash.bat)** (or
 pip install esptool
 
 # Flash complete merged binary
-esptool.py --chip esp32 --port COM3 --baud 460800 write_flash 0x0 esp32-wroom-complete-flash-offset-0x0.bin
+esptool.py --chip esp32 --port COM3 --baud 460800 write_flash 0x0 ESP32_WROOM_Firmware.bin
 ```
 
 ---
