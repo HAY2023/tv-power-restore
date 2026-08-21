@@ -8,7 +8,7 @@
 // SECONDARY TARGET (Optional): ESP32-C3 Super Mini / DevKitM-1
 // =============================================================================
 
-#define FIRMWARE_VERSION "1.1.0"
+#define FIRMWARE_VERSION "1.2.0"
 
 #ifdef BOARD_NAME
 #undef BOARD_NAME
