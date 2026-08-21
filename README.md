@@ -98,6 +98,7 @@
 3. توجه إلى أحد مواقع حرق السوفتوير المعتمدة:
    - [موقع Adafruit WebSerial ESPTool](https://adafruit.github.io/Adafruit_WebSerial_ESPTool/) أو
    - [موقع ESP Web Tools](https://esphome.github.io/esp-web-tools/)
+   - أو افتح الملف المرفق في المشروع: [`tools/web_flasher.html`](file:///h:/tv-power-restore/tools/web_flasher.html).
 4. اضغط على زر **Connect** ستظهر لك نافذة منبثقة، اختر منها منفذ الـ COM الخاص بالشريحة ثم اضغط **Connect**.
 5. اختر ملف الفلاش المدمج الذي قمت بتحميله: `esp32-wroom-complete-flash-offset-0x0.bin`.
 6. تأكد من ضبط خانة العنوان (Offset) على: `0x0` (أو `0x0000`).
@@ -106,7 +107,20 @@
 
 ---
 
-### 💻 الطريقة الثانية: البرمجة عبر موجه الأوامر باستخدام أداة `esptool.py`
+### 🖥️ الطريقة الثانية: تطبيق ويندوز المباشر (Windows Flasher Tool)
+
+إذا كنت تستخدم نظام ويندوز وتريد تطبيقاً رسومياً جاهزاً يعمل بضغطة زر واحدة:
+
+1. ادخل إلى مجلد `tools` في المشروع.
+2. اضغط مرتين على الملف: **[`حرق_السوفتوير_ويندوز.bat`](file:///h:/tv-power-restore/tools/حرق_السوفتوير_ويندوز.bat)** (أو `flash_windows.bat`).
+3. ستفتح لك واجهة رسومية جميلة وسهلة:
+   - يتعرف التطبيق تلقائياً على منفذ الـ COM للشريحة.
+   - اختر نوع اللوحة (**ESP32 WROOM** أو **ESP32-C3**).
+   - اضغط على زر **🔥 بدء حرق السوفتوير على الشريحة (Flash)** وسيقوم التطبيق بكل شيء تلقائياً!
+
+---
+
+### 💻 الطريقة الثالثة: البرمجة عبر موجه الأوامر باستخدام أداة `esptool.py`
 
 إذا كنت تفضل استخدام موجه الأوامر:
 
@@ -205,6 +219,11 @@ This project turns on Google TV / Smart TVs and activates the HDMI source automa
 Precompiled `.bin` files and merged flash images are generated automatically by GitHub Actions on every commit:
 - [`esp32-wroom-complete-flash-offset-0x0.bin`](https://github.com/HAY2023/tv-power-restore/releases) (Flash at `0x0`)
 - [`esp32-wroom-firmware.bin`](https://github.com/HAY2023/tv-power-restore/releases) (Flash at `0x10000`)
+
+### Easy Windows Flasher (GUI)
+1. Navigate to the `tools/` folder.
+2. Double-click **[`flash_windows.bat`](file:///h:/tv-power-restore/tools/flash_windows.bat)** to launch the graphical flasher.
+3. Select your COM port, board type, and click **Flash**!
 
 ### Quick Flash (Terminal)
 ```bash

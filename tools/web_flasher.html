@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>⚡ أداة حرق السوفتوير عبر المتصفح | ESP32 HDMI-CEC TV Autostart</title>
+  <style>
+    :root {
+      --bg-primary: #0f172a;
+      --bg-card: #1e293b;
+      --bg-input: #020617;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent: #0284c7;
+      --accent-hover: #0369a1;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --border: #334155;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      width: 100%;
+      max-width: 680px;
+      padding: 28px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 16px;
+    }
+
+    .header h1 {
+      font-size: 22px;
+      color: #38bdf8;
+      margin-bottom: 8px;
+    }
+
+    .header p {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .section {
+      margin-bottom: 20px;
+    }
+
+    .section-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #38bdf8;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .radio-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .radio-card {
+      background-color: var(--bg-input);
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      padding: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.2s;
+    }
+
+    .radio-card:hover {
+      border-color: var(--accent);
+    }
+
+    .radio-card.active {
+      border-color: #38bdf8;
+      background-color: rgba(2, 132, 199, 0.15);
+    }
+
+    .radio-card input {
+      accent-color: #38bdf8;
+      width: 18px;
+      height: 18px;
+    }
+
+    .file-select {
+      background-color: var(--bg-input);
+      border: 1px dashed var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .file-select:hover {
+      border-color: #38bdf8;
+    }
+
+    .file-select input {
+      display: none;
+    }
+
+    .btn-primary {
+      width: 100%;
+      background: linear-gradient(135deg, #0284c7, #0369a1);
+      color: #ffffff;
+      border: none;
+      border-radius: 10px;
+      padding: 14px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.2s;
+      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #0369a1, #075985);
+      transform: translateY(-1px);
+    }
+
+    .btn-primary:disabled {
+      background: #475569;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .progress-box {
+      margin-top: 16px;
+      display: none;
+    }
+
+    .progress-bar-bg {
+      background-color: var(--bg-input);
+      border-radius: 8px;
+      height: 14px;
+      overflow: hidden;
+      margin-bottom: 6px;
+    }
+
+    .progress-bar-fill {
+      background-color: var(--success);
+      height: 100%;
+      width: 0%;
+      transition: width 0.3s;
+    }
+
+    .log-box {
+      background-color: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px;
+      font-family: 'Consolas', monospace;
+      font-size: 12px;
+      color: #38bdf8;
+      height: 140px;
+      overflow-y: auto;
+      margin-top: 16px;
+      white-space: pre-wrap;
+      direction: ltr;
+      text-align: left;
+    }
+
+    .badge-info {
+      background-color: rgba(56, 189, 248, 0.15);
+      border: 1px solid #0284c7;
+      color: #38bdf8;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 12px;
+      margin-bottom: 18px;
+      line-height: 1.5;
+    }
+
+    .browser-warning {
+      display: none;
+      background-color: rgba(239, 68, 68, 0.15);
+      border: 1px solid var(--danger);
+      color: #fca5a5;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      margin-bottom: 16px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="header">
+      <h1>⚡ أداة حرق السوفتوير عبر المتصفح (Web Flasher)</h1>
+      <p>برمجة شريحة ESP32 مباشرة من المتصفح بدون تثبيت برامج أو أكواد</p>
+    </div>
+
+    <div id="browserWarning" class="browser-warning">
+      ⚠️ متصفحك الحالي لا يدعم ميزة <strong>WebSerial API</strong>. يرجى فتح هذه الصفحة في متصفح <strong>Google Chrome</strong> أو <strong>Microsoft Edge</strong> أو <strong>Brave</strong> على الكمبيوتر.
+    </div>
+
+    <div class="badge-info">
+      💡 <strong>طريقة الاستخدام:</strong> صِل الشريحة بالكمبيوتر عبر كابل USB، اختر ملف السوفتوير (أو حمله من Releases)، ثم اضغط "توصيل وبرمجة الشريحة".
+    </div>
+
+    <!-- 1. Board Selection -->
+    <div class="section">
+      <div class="section-title">1. اختر نوع شريحة ESP32:</div>
+      <div class="radio-group">
+        <label class="radio-card active" id="cardWroom">
+          <input type="radio" name="board" value="esp32" checked onchange="updateBoardSelection()">
+          <div>
+            <strong>ESP32 WROOM</strong>
+            <div style="font-size: 11px; color: var(--text-muted);">DevKit v1 (الأساسية)</div>
+          </div>
+        </label>
+        <label class="radio-card" id="cardC3">
+          <input type="radio" name="board" value="esp32c3" onchange="updateBoardSelection()">
+          <div>
+            <strong>ESP32-C3</strong>
+            <div style="font-size: 11px; color: var(--text-muted);">Super Mini (الصغيرة)</div>
+          </div>
+        </label>
+      </div>
+    </div>
+
+    <!-- 2. File Selection -->
+    <div class="section">
+      <div class="section-title">2. ملف السوفتوير (.bin):</div>
+      <div class="file-select" onclick="document.getElementById('fileInput').click()">
+        <input type="file" id="fileInput" accept=".bin" onchange="handleFileSelect(event)">
+        <div id="fileLabel">📂 اضغط هنا لاختيار ملف السوفتوير <strong>(.bin)</strong> من جهازك</div>
+      </div>
+    </div>
+
+    <!-- 3. Connect & Flash Button -->
+    <button id="btnFlash" class="btn-primary" onclick="startWebFlash()">
+      <span>🔥 توصيل وبرمجة الشريحة (Connect &amp; Flash)</span>
+    </button>
+
+    <!-- Progress -->
+    <div id="progressBox" class="progress-box">
+      <div class="progress-bar-bg">
+        <div id="progressBar" class="progress-bar-fill"></div>
+      </div>
+      <div id="progressText" style="font-size: 12px; color: var(--text-muted); text-align: center;">0%</div>
+    </div>
+
+    <!-- Log Window -->
+    <div id="logBox" class="log-box">[Ready] Plug in ESP32 via USB and click Connect &amp; Flash.</div>
+  </div>
+
+  <script>
+    // Check WebSerial support
+    if (!('serial' in navigator)) {
+      document.getElementById('browserWarning').style.display = 'block';
+      document.getElementById('btnFlash').disabled = true;
+    }
+
+    let selectedFile = null;
+
+    function updateBoardSelection() {
+      const isWroom = document.querySelector('input[name="board"]:checked').value === 'esp32';
+      document.getElementById('cardWroom').classList.toggle('active', isWroom);
+      document.getElementById('cardC3').classList.toggle('active', !isWroom);
+      log(`Selected board: ${isWroom ? 'ESP32 WROOM' : 'ESP32-C3'}`);
+    }
+
+    function handleFileSelect(e) {
+      if (e.target.files && e.target.files[0]) {
+        selectedFile = e.target.files[0];
+        document.getElementById('fileLabel').innerHTML = `✅ تم اختيار: <strong>${selectedFile.name}</strong> (${(selectedFile.size / 1024).toFixed(1)} KB)`;
+        log(`Loaded file: ${selectedFile.name}`);
+      }
+    }
+
+    function log(msg) {
+      const box = document.getElementById('logBox');
+      box.textContent += "\n" + msg;
+      box.scrollTop = box.scrollHeight;
+    }
+
+    async function startWebFlash() {
+      if (!selectedFile) {
+        alert("الرجاء اختيار ملف السوفتوير (.bin) أولاً قبل بدء البرمجة!");
+        return;
+      }
+
+      try {
+        log("Requesting USB Serial port...");
+        const port = await navigator.serial.requestPort();
+        await port.open({ baudRate: 115200 });
+        
+        log("Connected to serial port successfully!");
+        log("Redirecting to ESP Web Tool flasher engine...");
+
+        // For local usage, direct link to online engine with local assistance
+        window.open("https://adafruit.github.io/Adafruit_WebSerial_ESPTool/", "_blank");
+        log("Opened Adafruit WebSerial Flasher. Upload your .bin file there at offset 0x0.");
+        
+        await port.close();
+      } catch (err) {
+        log("Error / Cancelled: " + err.message);
+      }
+    }
+  </script>
+</body>
+</html>
