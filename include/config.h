@@ -8,7 +8,7 @@
 // SECONDARY TARGET (Optional): ESP32-C3 Super Mini / DevKitM-1
 // =============================================================================
 
-#define FIRMWARE_VERSION "1.0.0"
+#define FIRMWARE_VERSION "1.1.0"
 
 #if defined(BOARD_ESP32_C3)
     // Secondary Target: ESP32-C3 Super Mini

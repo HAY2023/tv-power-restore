@@ -1,10 +1,10 @@
 @echo off
 chcp 65001 >nul
-title أداة حرق السوفتوير - ESP32 HDMI-CEC TV Autostart (v1.0.0)
+title أداة حرق السوفتوير - ESP32 HDMI-CEC TV Autostart (v1.1.0)
 color 0B
 setlocal enabledelayedexpansion
 
-set "VERSION=1.0.0"
+set "VERSION=1.1.0"
 
 :MAIN_MENU
 cls
