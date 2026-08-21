@@ -183,7 +183,7 @@ bool CecEngine::transmitPacket(const CecPacket& packet) {
 }
 
 bool CecEngine::sendImageViewOn(uint8_t dest) {
-    Serial.printf("[CEC] Sending <Image View On> (0x04) to Destination [0x%02X]...\n", dest);
+    DEBUG_PRINTF("[CEC] Sending <Image View On> (0x04) to Destination [0x%02X]...\n", dest);
     
     CecPacket pkt{};
     pkt.initiator = CEC_LOGICAL_PLAYBACK_1; // 0x04
@@ -201,7 +201,7 @@ bool CecEngine::sendImageViewOn(uint8_t dest) {
 }
 
 bool CecEngine::sendTextViewOn(uint8_t dest) {
-    Serial.printf("[CEC] Sending <Text View On> (0x0D) to Destination [0x%02X]...\n", dest);
+    DEBUG_PRINTF("[CEC] Sending <Text View On> (0x0D) to Destination [0x%02X]...\n", dest);
     
     CecPacket pkt{};
     pkt.initiator = CEC_LOGICAL_PLAYBACK_1; // 0x04
@@ -219,7 +219,7 @@ bool CecEngine::sendTextViewOn(uint8_t dest) {
 }
 
 bool CecEngine::sendActiveSource(uint16_t physicalAddress) {
-    Serial.printf("[CEC] Sending <Active Source> (0x82) with Physical Address [0x%04X]...\n", physicalAddress);
+    DEBUG_PRINTF("[CEC] Sending <Active Source> (0x82) with Physical Address [0x%04X]...\n", physicalAddress);
     
     CecPacket pkt{};
     pkt.initiator = CEC_LOGICAL_PLAYBACK_1; // 0x04 (Playback 1)

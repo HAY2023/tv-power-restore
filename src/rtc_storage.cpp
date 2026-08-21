@@ -10,8 +10,16 @@ RtcStorage::RtcStorage(uint8_t sdaPin, uint8_t sclPin)
     : _sdaPin(sdaPin), _sclPin(sclPin), _rtcOnline(false), _eepromOnline(false) {}
 
 bool RtcStorage::begin() {
-    Serial.printf("[RTC] Initializing I2C bus (SDA: GPIO%d, SCL: GPIO%d)...\n", _sdaPin, _sclPin);
+    DEBUG_PRINTF("[RTC] Initializing I2C bus (SDA: GPIO%d, SCL: GPIO%d)...\n", _sdaPin, _sclPin);
+#if defined(ESP32) || defined(ESP8266)
     Wire.begin(_sdaPin, _sclPin);
+#elif defined(ARDUINO_ARCH_RP2040)
+    Wire.setSDA(_sdaPin);
+    Wire.setSCL(_sclPin);
+    Wire.begin();
+#else
+    Wire.begin();
+#endif
     delay(50);
 
     // 1. Initialize DS3231 RTC
@@ -33,7 +41,7 @@ bool RtcStorage::begin() {
     Wire.beginTransmission(AT24C32_I2C_ADDRESS);
     if (Wire.endTransmission() == 0) {
         _eepromOnline = true;
-        Serial.printf("[RTC] AT24C32 EEPROM detected at 0x%02X.\n", AT24C32_I2C_ADDRESS);
+        DEBUG_PRINTF("[RTC] AT24C32 EEPROM detected at 0x%02X.\n", AT24C32_I2C_ADDRESS);
     } else {
         _eepromOnline = false;
         Serial.println(F("[RTC] AT24C32 EEPROM not found at 0x57. Using ESP32 internal NVS as fallback storage."));
@@ -195,7 +203,7 @@ bool RtcStorage::saveBootTimestamp(uint32_t currentTimestamp) {
     bool nvsSuccess = saveTimestampToNvs(currentTimestamp);
 
     if (eepromSuccess || nvsSuccess) {
-        Serial.printf("[RTC] Boot timestamp [%u] saved successfully to %s.\n", 
+        DEBUG_PRINTF("[RTC] Boot timestamp [%u] saved successfully to %s.\n", 
                       currentTimestamp, 
                       eepromSuccess ? "AT24C32 EEPROM & NVS" : "Internal NVS");
         return true;
@@ -221,18 +229,18 @@ void RtcStorage::printOutageReport(const OutageInfo& info) {
     DateTime nowDt(info.currentBootTime);
     Serial.print(F("Current Power-On Time : "));
     printDateTime(nowDt);
-    Serial.printf(" (UNIX: %u)\n", info.currentBootTime);
+    DEBUG_PRINTF(" (UNIX: %u)\n", info.currentBootTime);
 
     if (info.validPreviousBoot) {
         DateTime prevDt(info.previousBootTime);
         Serial.print(F("Last Recorded Boot    : "));
         printDateTime(prevDt);
-        Serial.printf(" (UNIX: %u)\n", info.previousBootTime);
+        DEBUG_PRINTF(" (UNIX: %u)\n", info.previousBootTime);
 
         Serial.println(F("--------------------------------------------------"));
-        Serial.printf("Calculated Outage     : %d days, %02d hrs, %02d min, %02d sec\n",
+        DEBUG_PRINTF("Calculated Outage     : %d days, %02d hrs, %02d min, %02d sec\n",
                       info.days, info.hours, info.minutes, info.seconds);
-        Serial.printf("Total Duration        : %u seconds\n", info.outageDurationSec);
+        DEBUG_PRINTF("Total Duration        : %u seconds\n", info.outageDurationSec);
     } else {
         Serial.println(F("Last Recorded Boot    : [None / First Run / Storage Cleared]"));
         Serial.println(F("Calculated Outage     : First boot detected."));

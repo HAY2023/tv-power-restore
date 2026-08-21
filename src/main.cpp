@@ -17,10 +17,10 @@ void setup() {
     Serial.println(F("#       ESP32 HDMI-CEC TV AUTOSTART SYSTEM       #"));
     Serial.println(F("#      Standalone Power-Restoration Trigger      #"));
     Serial.println(F("##################################################"));
-    Serial.printf("[SYSTEM] Firmware Version: v%s (Build: %s %s)\n", FIRMWARE_VERSION, __DATE__, __TIME__);
-    Serial.printf("[SYSTEM] Configured CEC Pin: GPIO%d | SDA: GPIO%d | SCL: GPIO%d\n", PIN_CEC, PIN_SDA, PIN_SCL);
-    Serial.printf("[SYSTEM] Wait delay before CEC trigger: %u seconds\n", WAIT_SECONDS);
-    Serial.printf("[SYSTEM] Target HDMI Physical Address: 0x%04X\n", HDMI_PHYSICAL_ADDRESS);
+    DEBUG_PRINTF("[SYSTEM] Firmware Version: v%s (Build: %s %s)\n", FIRMWARE_VERSION, __DATE__, __TIME__);
+    DEBUG_PRINTF("[SYSTEM] Configured CEC Pin: GPIO%d | SDA: GPIO%d | SCL: GPIO%d\n", PIN_CEC, PIN_SDA, PIN_SCL);
+    DEBUG_PRINTF("[SYSTEM] Wait delay before CEC trigger: %u seconds\n", WAIT_SECONDS);
+    DEBUG_PRINTF("[SYSTEM] Target HDMI Physical Address: 0x%04X\n", HDMI_PHYSICAL_ADDRESS);
     Serial.println(F("--------------------------------------------------"));
 
     // 2. Initialize CEC line hardware
@@ -45,9 +45,9 @@ void setup() {
     // 5. Wait for TV motherboard & HDMI subsystem to power on
     // Google TVs and Smart TVs typically require 10-15 seconds after AC power is restored
     // to boot their standby microcontroller and enable HDMI-CEC bus listening.
-    Serial.printf("\n[TIMING] Waiting %u seconds for TV HDMI-CEC subsystem readiness...\n", WAIT_SECONDS);
+    DEBUG_PRINTF("\n[TIMING] Waiting %u seconds for TV HDMI-CEC subsystem readiness...\n", WAIT_SECONDS);
     for (uint32_t sec = WAIT_SECONDS; sec > 0; --sec) {
-        Serial.printf("[TIMING] Ready in %2u seconds...\r", sec);
+        DEBUG_PRINTF("[TIMING] Ready in %2u seconds...\r", sec);
         delay(1000);
     }
     Serial.println(F("\n[TIMING] Wait period completed. Initiating HDMI-CEC sequence."));
