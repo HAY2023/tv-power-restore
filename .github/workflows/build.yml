@@ -69,24 +69,23 @@ jobs:
           # Convert line endings of batch scripts to CRLF to ensure Windows compatibility
           sed -i 's/$/\r/' release_binaries/حرق_السوفتوير.bat
           sed -i 's/$/\r/' release_binaries/flash.bat
-          
-          # Create a ZIP archive for the release
-          cd release_binaries
-          zip -r ../TV_Power_Restore_Firmware.zip *
-          cd ..
 
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: TV_Power_Restore_Firmware
-          path: TV_Power_Restore_Firmware.zip
+          path: release_binaries/
           retention-days: 30
 
       - name: Create GitHub Release (On Git Tag)
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
-          files: TV_Power_Restore_Firmware.zip
+          files: |
+            release_binaries/ESP32_WROOM_Firmware.bin
+            release_binaries/ESP32_C3_Firmware.bin
+            release_binaries/حرق_السوفتوير.bat
+            release_binaries/flash.bat
           generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

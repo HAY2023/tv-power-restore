@@ -9,19 +9,19 @@ set "VERSION=1.0.0"
 :MAIN_MENU
 cls
 echo ===============================================================================
-echo     📺 أداة حرق السوفتوير لشريحة ESP32 - نظام تشغيل التلفزيون HDMI-CEC
-echo                       الإصدار الرسمي: v%VERSION%
+echo     ESP32 HDMI-CEC TV Autostart Flasher (أداة حرق السوفتوير)
+echo     Version / الإصدار: v%VERSION%
 echo ===============================================================================
 echo.
-echo  [1] 🔍 كشف جميع المتحكمات المتصلة واختيار الشريحة للحرق المباشر
-echo  [2] ⚡ حرق شريحة ESP32 WROOM / DevKit v1 (الأساسية الافتراضية)
-echo  [3] ⚡ حرق شريحة ESP32-C3 Super Mini (الاختيارية الصغيرة)
-echo  [4] 📋 قراءة بيانات وتفاصيل الشريحة المتصلة (Chip Info / MAC / Flash)
-echo  [5] 🗑️ مسح ذاكرة الشريحة بالكامل (Full Chip Erase)
-echo  [6] ❌ خروج (Exit)
+echo  [1] Auto-detect and Flash (كشف تلقائي وحرق)
+echo  [2] Flash ESP32 WROOM / DevKit v1 (الأساسية)
+echo  [3] Flash ESP32-C3 Super Mini (الصغيرة)
+echo  [4] Read Chip Info / MAC (قراءة بيانات الشريحة)
+echo  [5] Full Chip Erase (مسح ذاكرة الشريحة بالكامل)
+echo  [6] Exit (خروج)
 echo.
 echo ===============================================================================
-set /p "CHOICE=👉 اختر رقم العملية ثم اضغط Enter [1-6]: "
+set /p "CHOICE=👉 Select an option / اختر رقم العملية [1-6]: "
 
 if "%CHOICE%"=="1" (
     goto AUTO_DETECT_AND_FLASH
