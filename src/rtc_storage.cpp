@@ -1,9 +1,10 @@
 #include "rtc_storage.h"
 #include "config.h"
 #include <Wire.h>
+#if defined(ESP32)
 #include <Preferences.h>
-
 static Preferences preferences;
+#endif
 
 RtcStorage::RtcStorage(uint8_t sdaPin, uint8_t sclPin)
     : _sdaPin(sdaPin), _sclPin(sclPin), _rtcOnline(false), _eepromOnline(false) {}
@@ -90,14 +91,19 @@ bool RtcStorage::readEepromBytes(uint16_t memoryAddress, uint8_t* data, size_t l
 }
 
 bool RtcStorage::saveTimestampToNvs(uint32_t timestamp) {
+#if defined(ESP32)
     preferences.begin("tv-autostart", false);
     preferences.putUInt("magic", EEPROM_MAGIC_KEY);
     preferences.putUInt("last_boot", timestamp);
     preferences.end();
     return true;
+#else
+    return false;
+#endif
 }
 
 bool RtcStorage::readTimestampFromNvs(uint32_t& timestamp) {
+#if defined(ESP32)
     preferences.begin("tv-autostart", true);
     uint32_t magic = preferences.getUInt("magic", 0);
     if (magic != EEPROM_MAGIC_KEY) {
@@ -107,6 +113,9 @@ bool RtcStorage::readTimestampFromNvs(uint32_t& timestamp) {
     timestamp = preferences.getUInt("last_boot", 0);
     preferences.end();
     return (timestamp > 0);
+#else
+    return false;
+#endif
 }
 
 bool RtcStorage::calculateOutage(OutageInfo& outInfo) {

@@ -129,8 +129,12 @@ bool CecEngine::transmitPacket(const CecPacket& packet) {
     }
 
     // Disable interrupts temporarily during critical transmission timing
+#if defined(ESP32)
     portMUX_TYPE mux = portMUX_INITIALIZER_UNLOCKED;
     portENTER_CRITICAL(&mux);
+#else
+    noInterrupts();
+#endif
 
     // 2. Transmit Start Bit
     sendStartBit();
@@ -142,7 +146,11 @@ bool CecEngine::transmitPacket(const CecPacket& packet) {
 
     // If packet only had a header (ping), finish here
     if (isHeaderOnly) {
+#if defined(ESP32)
         portEXIT_CRITICAL(&mux);
+#else
+        interrupts();
+#endif
         return headerAck;
     }
 
@@ -160,7 +168,11 @@ bool CecEngine::transmitPacket(const CecPacket& packet) {
         }
     }
 
+#if defined(ESP32)
     portEXIT_CRITICAL(&mux);
+#else
+    interrupts();
+#endif
 
     // Broadcast messages (dest = 0x0F) do not require direct ACK
     if (packet.destination == CEC_LOGICAL_BROADCAST) {
