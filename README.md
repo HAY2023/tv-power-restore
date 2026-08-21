@@ -3,10 +3,11 @@
 
 <div align="center">
 
+[![Version: 1.0.0](https://img.shields.io/badge/الإصدار-v1.0.0-blueviolet.svg)](https://github.com/HAY2023/tv-power-restore/releases/tag/v1.0.0)
 [![License: MIT](https://img.shields.io/badge/الترخيص-MIT-blue.svg)](LICENSE)
 [![Build Firmware](https://github.com/HAY2023/tv-power-restore/actions/workflows/build.yml/badge.svg)](https://github.com/HAY2023/tv-power-restore/actions/workflows/build.yml)
 [![اللوحة الأساسية](https://img.shields.io/badge/اللوحة%20الأساسية-ESP32%20WROOM-green.svg)](#-قائمة-المكونات-والقطع-المطلوبة-bom)
-[![برمجة بدون كود](https://img.shields.io/badge/برمجة%20مباشرة-عبر%20المتصفح-brightgreen.svg)](#-الطريقة-الأولى-البرمجة-المباشرة-عبر-المتصفح-الأسهل-بدون-برامج-أو-أكواد)
+[![أداة الحرق لويندوز](https://img.shields.io/badge/أداة%20الحرق-ويندوز%20.bat-brightgreen.svg)](#-الطريقة-الثانية-أداة-ويندوز-السريعة-بنقرة-واحدة-ملف-bat-التفاعلي)
 
 **جهاز صغير ومستقل يتم تركيبه في منفذ HDMI لتشغيل شاشات Google TV والشاشات الذكية تلقائياً بعد عودة التيار الكهربائي المنقطع، واختيار منفذ الدخل فوراً — بدون الحاجة لشبكة واي فاي وبدون أي تدخل يدوي.**
 

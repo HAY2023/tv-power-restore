@@ -17,7 +17,7 @@ void setup() {
     Serial.println(F("#       ESP32 HDMI-CEC TV AUTOSTART SYSTEM       #"));
     Serial.println(F("#      Standalone Power-Restoration Trigger      #"));
     Serial.println(F("##################################################"));
-    Serial.printf("[SYSTEM] Firmware build: %s %s\n", __DATE__, __TIME__);
+    Serial.printf("[SYSTEM] Firmware Version: v%s (Build: %s %s)\n", FIRMWARE_VERSION, __DATE__, __TIME__);
     Serial.printf("[SYSTEM] Configured CEC Pin: GPIO%d | SDA: GPIO%d | SCL: GPIO%d\n", PIN_CEC, PIN_SDA, PIN_SCL);
     Serial.printf("[SYSTEM] Wait delay before CEC trigger: %u seconds\n", WAIT_SECONDS);
     Serial.printf("[SYSTEM] Target HDMI Physical Address: 0x%04X\n", HDMI_PHYSICAL_ADDRESS);

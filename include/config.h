@@ -8,6 +8,8 @@
 // SECONDARY TARGET (Optional): ESP32-C3 Super Mini / DevKitM-1
 // =============================================================================
 
+#define FIRMWARE_VERSION "1.0.0"
+
 #if defined(BOARD_ESP32_C3)
     // Secondary Target: ESP32-C3 Super Mini / DevKitM-1
     #define DEFAULT_CEC_PIN      3   // GPIO3 (CEC line through 2.7k ohm resistor)
