@@ -259,6 +259,7 @@ if %errorlevel% neq 0 (
 :: ============================================================================
 :LOCATE_BINARY
 set "TARGET_BIN="
+if exist "binaries\%BIN_FILE%" set "TARGET_BIN=binaries\%BIN_FILE%"
 if exist "%BIN_FILE%" set "TARGET_BIN=%BIN_FILE%"
 if exist "release_binaries\%BIN_FILE%" set "TARGET_BIN=release_binaries\%BIN_FILE%"
 if exist "%ALT_BIN%" (

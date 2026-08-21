@@ -9,6 +9,7 @@
 *.hex
 *.elf
 *.bin
+!binaries/*.bin
 *.map
 build/
 output/
