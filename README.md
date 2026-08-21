@@ -269,3 +269,4 @@ esptool.py --chip esp32 --port COM3 --baud 460800 write_flash 0x0 ESP32_WROOM_Fi
 
 ## 📄 License
 This project is open-source and licensed under the [MIT License](LICENSE).
+<!-- GitHub Achievements -->
