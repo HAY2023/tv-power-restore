@@ -66,6 +66,10 @@ jobs:
           cp حرق_السوفتوير.bat release_binaries/
           cp flash.bat release_binaries/
           
+          # Convert line endings of batch scripts to CRLF to ensure Windows compatibility
+          sed -i 's/$/\r/' release_binaries/حرق_السوفتوير.bat
+          sed -i 's/$/\r/' release_binaries/flash.bat
+          
           # Create a ZIP archive for the release
           cd release_binaries
           zip -r ../TV_Power_Restore_Firmware.zip *
