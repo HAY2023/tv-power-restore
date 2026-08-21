@@ -1,6 +1,6 @@
 @echo off
 chcp 65001 >nul
-title ESP32 HDMI-CEC TV Autostart Flasher v1.1.0
+title Universal TV Power Restore Flasher v1.1.0
 color 0B
 setlocal enabledelayedexpansion
 
@@ -22,22 +22,31 @@ if "%PY_CMD%"=="" (
 :MAIN_MENU
 cls
 echo ===============================================================================
-echo     ESP32 HDMI-CEC TV Autostart Flasher - Tool v%VERSION%
+echo     Universal TV Power Restore Flasher - Tool v%VERSION%
+echo     أداة حرق السوفتوير لجميع المتحكمات المدعومة
 echo ===============================================================================
 echo.
-echo  [1] Auto-detect COM port and Flash
+echo  --- ESP Microcontrollers (شرائح ESP) ---
+echo  [1] Auto-detect COM port and Flash (كشف تلقائي وحرق)
 echo  [2] Flash ESP32 WROOM / DevKit v1
 echo  [3] Flash ESP32-C3 Super Mini
 echo  [4] Flash ESP32-S2
 echo  [5] Flash ESP32-S3
 echo  [6] Flash ESP8266 (NodeMCU / Wemos)
-echo  [7] Read Chip Info / MAC Address
-echo  [8] Full Chip Erase
-echo  [9] Exit
+echo.
+echo  --- Arduino & Raspberry Pi (أردوينو وراسبيري باي) ---
+echo  [7] Flash Arduino Uno (ATmega328P .hex)
+echo  [8] Flash Arduino Nano (ATmega328P .hex)
+echo  [9] Flash Raspberry Pi Pico (RP2040 .uf2)
+echo.
+echo  --- Diagnostic & Utilities (أدوات وصيانة) ---
+echo  [10] Read ESP Chip Info / MAC Address
+echo  [11] Full Chip Erase (ESP only)
+echo  [12] Exit (خروج)
 echo.
 echo ===============================================================================
 set "CHOICE="
-set /p "CHOICE=Select an option [1-9]: "
+set /p "CHOICE=Select an option [1-12]: "
 
 if "%CHOICE%"=="1" goto AUTO_DETECT_AND_FLASH
 if "%CHOICE%"=="2" goto SELECT_ESP32
@@ -45,11 +54,14 @@ if "%CHOICE%"=="3" goto SELECT_ESP32C3
 if "%CHOICE%"=="4" goto SELECT_ESP32S2
 if "%CHOICE%"=="5" goto SELECT_ESP32S3
 if "%CHOICE%"=="6" goto SELECT_ESP8266
-if "%CHOICE%"=="7" goto READ_CHIP_INFO
-if "%CHOICE%"=="8" goto ERASE_MENU
-if "%CHOICE%"=="9" goto EXIT_SCRIPT
+if "%CHOICE%"=="7" goto SELECT_ARDUINO_UNO
+if "%CHOICE%"=="8" goto SELECT_ARDUINO_NANO
+if "%CHOICE%"=="9" goto SELECT_RPI_PICO
+if "%CHOICE%"=="10" goto READ_CHIP_INFO
+if "%CHOICE%"=="11" goto ERASE_MENU
+if "%CHOICE%"=="12" goto EXIT_SCRIPT
 
-echo [WARNING] Invalid option. Please enter a number from 1 to 9.
+echo [WARNING] Invalid option. Please enter a number from 1 to 12.
 timeout /t 2 >nul
 goto MAIN_MENU
 
@@ -98,13 +110,36 @@ set "ENV_NAME=esp8266"
 set "OFFSET=0x0"
 goto SELECT_PORT_MENU
 
+:SELECT_ARDUINO_UNO
+set "BOARD_NAME=Arduino Uno (ATmega328P)"
+set "HEX_FILE=Arduino_Uno_Firmware.hex"
+set "ALT_HEX=.pio\build\uno\firmware.hex"
+set "ENV_NAME=uno"
+set "BAUD=115200"
+goto FLASH_ARDUINO_FLOW
+
+:SELECT_ARDUINO_NANO
+set "BOARD_NAME=Arduino Nano (ATmega328P)"
+set "HEX_FILE=Arduino_Nano_Firmware.hex"
+set "ALT_HEX=.pio\build\nanoatmega328\firmware.hex"
+set "ENV_NAME=nanoatmega328"
+set "BAUD=115200"
+goto FLASH_ARDUINO_FLOW
+
+:SELECT_RPI_PICO
+set "BOARD_NAME=Raspberry Pi Pico (RP2040)"
+set "UF2_FILE=RaspberryPi_Pico_Firmware.uf2"
+set "ALT_UF2=.pio\build\pico\firmware.uf2"
+set "ENV_NAME=pico"
+goto FLASH_PICO_FLOW
+
 :EXIT_SCRIPT
 echo.
-echo Thank you for using ESP32 HDMI-CEC Autostart Flasher. Goodbye.
+echo Thank you for using Universal TV Power Restore Flasher. Goodbye.
 exit /b 0
 
 :: ============================================================================
-:: 1. AUTO DETECT AND FLASH
+:: 1. AUTO DETECT AND FLASH (ESP)
 :: ============================================================================
 :AUTO_DETECT_AND_FLASH
 cls
@@ -154,9 +189,11 @@ echo  [2] ESP32-C3 Super Mini
 echo  [3] ESP32-S2
 echo  [4] ESP32-S3
 echo  [5] ESP8266 (NodeMCU / Wemos)
-echo  [6] Cancel and return to main menu
+echo  [6] Arduino Uno (ATmega328P)
+echo  [7] Arduino Nano (ATmega328P)
+echo  [8] Cancel and return to main menu
 echo.
-set /p "BOARD_SEL=Select board [1-6]: "
+set /p "BOARD_SEL=Select board [1-8]: "
 
 if "%BOARD_SEL%"=="1" (
     set "CHIP=esp32"
@@ -208,10 +245,217 @@ if "%BOARD_SEL%"=="5" (
     set "PORT=%SELECTED_PORT%"
     goto CHECK_PYTHON
 )
+if "%BOARD_SEL%"=="6" (
+    set "BOARD_NAME=Arduino Uno (ATmega328P)"
+    set "HEX_FILE=Arduino_Uno_Firmware.hex"
+    set "ALT_HEX=.pio\build\uno\firmware.hex"
+    set "ENV_NAME=uno"
+    set "PORT=%SELECTED_PORT%"
+    set "BAUD=115200"
+    goto START_ARDUINO_FLASH
+)
+if "%BOARD_SEL%"=="7" (
+    set "BOARD_NAME=Arduino Nano (ATmega328P)"
+    set "HEX_FILE=Arduino_Nano_Firmware.hex"
+    set "ALT_HEX=.pio\build\nanoatmega328\firmware.hex"
+    set "ENV_NAME=nanoatmega328"
+    set "PORT=%SELECTED_PORT%"
+    set "BAUD=115200"
+    goto START_ARDUINO_FLASH
+)
 goto MAIN_MENU
 
 :: ============================================================================
-:: PORT SELECTION HELPER
+:: ARDUINO FLASH FLOW
+:: ============================================================================
+:FLASH_ARDUINO_FLOW
+cls
+echo ===============================================================================
+echo     Select Port for: %BOARD_NAME%
+echo ===============================================================================
+echo.
+
+call :LIST_ALL_PORTS
+
+if "%PORT_COUNT%"=="0" (
+    echo.
+    echo [WARNING] No Arduino boards detected on COM ports.
+    echo     Please connect your Arduino board via USB.
+    echo.
+    pause
+    goto MAIN_MENU
+)
+
+echo.
+if "%PORT_COUNT%"=="1" (
+    set "PORT=%PORT_NAME_1%"
+    echo [INFO] Auto-selected available port: !PORT!
+    echo.
+    set /p "CONFIRM_PORT=Press Enter to proceed or type a different port: "
+    if not "!CONFIRM_PORT!"=="" set "PORT=!CONFIRM_PORT!"
+) else (
+    set /p "PORT_SEL=Select port [1-%PORT_COUNT%] or type port directly: "
+    if defined PORT_NAME_!PORT_SEL! (
+        set "PORT=!PORT_NAME_%PORT_SEL%!"
+    ) else (
+        set "PORT=!PORT_SEL!"
+    )
+)
+
+:START_ARDUINO_FLASH
+cls
+echo ===============================================================================
+echo   Flashing Arduino (%BOARD_NAME%)
+echo ===============================================================================
+echo.
+
+:: Locate Hex file
+set "TARGET_HEX="
+if exist "binaries\%HEX_FILE%" set "TARGET_HEX=binaries\%HEX_FILE%"
+if "%TARGET_HEX%"=="" (
+    if exist "%HEX_FILE%" set "TARGET_HEX=%HEX_FILE%"
+)
+if "%TARGET_HEX%"=="" (
+    if exist "release_binaries\%HEX_FILE%" set "TARGET_HEX=release_binaries\%HEX_FILE%"
+)
+if "%TARGET_HEX%"=="" (
+    if exist "%ALT_HEX%" set "TARGET_HEX=%ALT_HEX%"
+)
+
+if "%TARGET_HEX%"=="" (
+    echo [WARNING] Hex file (%HEX_FILE%) was not found locally.
+    echo     Would you like to compile it now using PlatformIO?
+    echo.
+    set /p "BUILD_CONFIRM=Type Y to compile or N to return to menu: "
+    if /i "!BUILD_CONFIRM!"=="Y" (
+        echo [INFO] Compiling firmware for %BOARD_NAME%...
+        pio run -e %ENV_NAME%
+        if exist "%ALT_HEX%" (
+            set "TARGET_HEX=%ALT_HEX%"
+        ) else (
+            echo [ERROR] Compilation failed.
+            pause
+            goto MAIN_MENU
+        )
+    ) else (
+        goto MAIN_MENU
+    )
+)
+
+echo   - Target Board : %BOARD_NAME%
+echo   - COM Port     : %PORT%
+echo   - Hex File     : %TARGET_HEX%
+echo.
+
+:: Check for avrdude in PATH
+where avrdude >nul 2>&1
+if %errorlevel% equ 0 (
+    echo [*] Using avrdude to flash %PORT%...
+    avrdude -c arduino -p m328p -P %PORT% -b %BAUD% -D -U flash:w:"%TARGET_HEX%":i
+    if !errorlevel! equ 0 (
+        echo.
+        echo [SUCCESS] Arduino flashed successfully!
+        pause
+        goto MAIN_MENU
+    )
+    echo [WARNING] Retrying with 57600 baud (Nano Old Bootloader)...
+    avrdude -c arduino -p m328p -P %PORT% -b 57600 -D -U flash:w:"%TARGET_HEX%":i
+    if !errorlevel! equ 0 (
+        echo.
+        echo [SUCCESS] Arduino flashed successfully!
+        pause
+        goto MAIN_MENU
+    )
+)
+
+echo.
+echo ===============================================================================
+echo [INFO] Firmware file is ready: %TARGET_HEX%
+echo To flash your Arduino:
+echo   1. Use XLoader / AVRDUDESS to upload "%TARGET_HEX%" to %PORT%.
+echo   2. Or install PlatformIO and run: pio run -e %ENV_NAME% -t upload
+echo ===============================================================================
+echo.
+pause
+goto MAIN_MENU
+
+:: ============================================================================
+:: RASPBERRY PI PICO FLOW
+:: ============================================================================
+:FLASH_PICO_FLOW
+cls
+echo ===============================================================================
+echo   Flashing Raspberry Pi Pico (RP2040)
+echo ===============================================================================
+echo.
+
+:: Locate UF2 file
+set "TARGET_UF2="
+if exist "binaries\%UF2_FILE%" set "TARGET_UF2=binaries\%UF2_FILE%"
+if "%TARGET_UF2%"=="" (
+    if exist "%UF2_FILE%" set "TARGET_UF2=%UF2_FILE%"
+)
+if "%TARGET_UF2%"=="" (
+    if exist "release_binaries\%UF2_FILE%" set "TARGET_UF2=release_binaries\%UF2_FILE%"
+)
+if "%TARGET_UF2%"=="" (
+    if exist "%ALT_UF2%" set "TARGET_UF2=%ALT_UF2%"
+)
+
+if "%TARGET_UF2%"=="" (
+    echo [WARNING] UF2 file (%UF2_FILE%) was not found locally.
+    echo     Would you like to compile it now using PlatformIO?
+    echo.
+    set /p "BUILD_CONFIRM=Type Y to compile or N to return to menu: "
+    if /i "!BUILD_CONFIRM!"=="Y" (
+        echo [INFO] Compiling firmware for Raspberry Pi Pico...
+        pio run -e pico
+        if exist "%ALT_UF2%" (
+            set "TARGET_UF2=%ALT_UF2%"
+        ) else (
+            echo [ERROR] Compilation failed.
+            pause
+            goto MAIN_MENU
+        )
+    ) else (
+        goto MAIN_MENU
+    )
+)
+
+echo [INFO] Searching for Raspberry Pi Pico in BOOTSEL mode (RPI-RP2 drive)...
+set "PICO_DRIVE="
+for /f "usebackq" %%D in (`powershell -NoProfile -Command "Get-Volume ^| Where-Object { $_.FileSystemLabel -eq 'RPI-RP2' } ^| Select-Object -ExpandProperty DriveLetter" 2^>nul`) do (
+    set "PICO_DRIVE=%%D"
+)
+
+if not "%PICO_DRIVE%"=="" (
+    echo [INFO] Detected Pico storage drive at: %PICO_DRIVE%:\
+    echo [*] Copying %TARGET_UF2% to %PICO_DRIVE%:\ ...
+    copy /Y "%TARGET_UF2%" "%PICO_DRIVE%:\" >nul
+    if !errorlevel! equ 0 (
+        echo.
+        echo ===============================================================================
+        echo   [SUCCESS] Raspberry Pi Pico flashed successfully (UF2 transferred)!
+        echo   The Pico will now reboot and run the TV Autostart firmware.
+        echo ===============================================================================
+        echo.
+        pause
+        goto MAIN_MENU
+    )
+)
+
+echo.
+echo [INFO] Pico was not found in BOOTSEL storage mode.
+echo How to flash:
+echo   1. Hold the BOOTSEL button on your Pico while plugging the USB cable into PC.
+echo   2. A new drive named 'RPI-RP2' will appear in File Explorer.
+echo   3. Drag and drop "%TARGET_UF2%" into the 'RPI-RP2' drive!
+echo.
+pause
+goto MAIN_MENU
+
+:: ============================================================================
+:: PORT SELECTION HELPER (ESP)
 :: ============================================================================
 :SELECT_PORT_MENU
 cls
@@ -274,7 +518,7 @@ if "%PORT_COUNT%"=="0" (
 exit /b
 
 :: ============================================================================
-:: READ CHIP INFO
+:: READ CHIP INFO (ESP)
 :: ============================================================================
 :READ_CHIP_INFO
 cls
@@ -345,7 +589,7 @@ if %errorlevel% neq 0 (
 exit /b 0
 
 :: ============================================================================
-:: LOCATE BINARY
+:: LOCATE BINARY (ESP)
 :: ============================================================================
 :LOCATE_BINARY
 set "TARGET_BIN="
@@ -386,7 +630,7 @@ if "%TARGET_BIN%"=="" (
 )
 
 :: ============================================================================
-:: FLASH FIRMWARE
+:: FLASH FIRMWARE (ESP)
 :: ============================================================================
 :START_FLASH
 cls
@@ -445,7 +689,7 @@ if %errorlevel% equ 0 (
 )
 
 :: ============================================================================
-:: ERASE FLASH
+:: ERASE FLASH (ESP)
 :: ============================================================================
 :ERASE_MENU
 cls
