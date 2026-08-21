@@ -4,7 +4,7 @@
 <div align="center">
 
 [![License: MIT](https://img.shields.io/badge/الترخيص-MIT-blue.svg)](LICENSE)
-[![Build Firmware](https://github.com/OWNER/REPO/actions/workflows/build.yml/badge.svg)](https://github.com/OWNER/REPO/actions/workflows/build.yml)
+[![Build Firmware](https://github.com/HAY2023/tv-power-restore/actions/workflows/build.yml/badge.svg)](https://github.com/HAY2023/tv-power-restore/actions/workflows/build.yml)
 [![اللوحة الأساسية](https://img.shields.io/badge/اللوحة%20الأساسية-ESP32%20WROOM-green.svg)](#-قائمة-المكونات-والقطع-المطلوبة-bom)
 [![برمجة بدون كود](https://img.shields.io/badge/برمجة%20مباشرة-عبر%20المتصفح-brightgreen.svg)](#-الطريقة-الأولى-البرمجة-المباشرة-عبر-المتصفح-الأسهل-بدون-برامج-أو-أكواد)
 
@@ -82,8 +82,8 @@
 
 | اللوحة | ملف الفلاش المدمج الشامل (موصى به) | ملف السوفتوير الفردي |
 | :--- | :--- | :--- |
-| **ESP32 WROOM (DevKit v1)** *(الأساسية)* | [`esp32-wroom-complete-flash-offset-0x0.bin`](https://github.com/OWNER/REPO/releases) *(يُحرق عند العنوان `0x0`)* | [`esp32-wroom-firmware.bin`](https://github.com/OWNER/REPO/releases) *(يُحرق عند العنوان `0x10000`)* |
-| **ESP32-C3 Super Mini** *(الاختيارية)* | [`esp32-c3-complete-flash-offset-0x0.bin`](https://github.com/OWNER/REPO/releases) *(يُحرق عند العنوان `0x0`)* | [`esp32-c3-firmware.bin`](https://github.com/OWNER/REPO/releases) *(يُحرق عند العنوان `0x10000`)* |
+| **ESP32 WROOM (DevKit v1)** *(الأساسية)* | [`esp32-wroom-complete-flash-offset-0x0.bin`](https://github.com/HAY2023/tv-power-restore/releases) *(يُحرق عند العنوان `0x0`)* | [`esp32-wroom-firmware.bin`](https://github.com/HAY2023/tv-power-restore/releases) *(يُحرق عند العنوان `0x10000`)* |
+| **ESP32-C3 Super Mini** *(الاختيارية)* | [`esp32-c3-complete-flash-offset-0x0.bin`](https://github.com/HAY2023/tv-power-restore/releases) *(يُحرق عند العنوان `0x0`)* | [`esp32-c3-firmware.bin`](https://github.com/HAY2023/tv-power-restore/releases) *(يُحرق عند العنوان `0x10000`)* |
 
 ---
 
@@ -152,7 +152,7 @@ pip install esptool
 إذا كنت ترغب في تعديل الكود بنفسك:
 1. قم باستنساخ المشروع:
    ```bash
-   git clone https://github.com/OWNER/REPO.git
+   git clone https://github.com/HAY2023/tv-power-restore.git
    cd esp32-hdmi-cec-tv-autostart
    ```
 2. افتح المجلد داخل برنامج VS Code مع إضافة PlatformIO.
@@ -203,8 +203,8 @@ This project turns on Google TV / Smart TVs and activates the HDMI source automa
 
 ### Precompiled Binary Releases
 Precompiled `.bin` files and merged flash images are generated automatically by GitHub Actions on every commit:
-- [`esp32-wroom-complete-flash-offset-0x0.bin`](https://github.com/OWNER/REPO/releases) (Flash at `0x0`)
-- [`esp32-wroom-firmware.bin`](https://github.com/OWNER/REPO/releases) (Flash at `0x10000`)
+- [`esp32-wroom-complete-flash-offset-0x0.bin`](https://github.com/HAY2023/tv-power-restore/releases) (Flash at `0x0`)
+- [`esp32-wroom-firmware.bin`](https://github.com/HAY2023/tv-power-restore/releases) (Flash at `0x10000`)
 
 ### Quick Flash (Terminal)
 ```bash
