@@ -83,3 +83,16 @@ constexpr uint32_t EEPROM_MAGIC_KEY     = 0x54564345;
 
 // Serial Monitor Diagnostics Baud Rate
 constexpr uint32_t SERIAL_BAUD_RATE = 115200;
+
+// -------------------------------------------------------------
+// Debug Print Wrapper (AVR does not support Serial.printf natively)
+// -------------------------------------------------------------
+#if defined(ESP32) || defined(ESP8266)
+  #define DEBUG_PRINTF(fmt, ...) Serial.printf(fmt, ##__VA_ARGS__)
+#else
+  #define DEBUG_PRINTF(fmt, ...) do { \
+      char _buf[128]; \
+      snprintf(_buf, sizeof(_buf), (fmt), ##__VA_ARGS__); \
+      Serial.print(_buf); \
+  } while(0)
+#endif
