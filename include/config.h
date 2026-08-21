@@ -11,16 +11,41 @@
 #define FIRMWARE_VERSION "1.0.0"
 
 #if defined(BOARD_ESP32_C3)
-    // Secondary Target: ESP32-C3 Super Mini / DevKitM-1
-    #define DEFAULT_CEC_PIN      3   // GPIO3 (CEC line through 2.7k ohm resistor)
-    #define DEFAULT_I2C_SDA_PIN  8   // GPIO8 (I2C SDA)
-    #define DEFAULT_I2C_SCL_PIN  9   // GPIO9 (I2C SCL)
+    // Secondary Target: ESP32-C3 Super Mini
+    #define DEFAULT_CEC_PIN      3   // GPIO3
+    #define DEFAULT_I2C_SDA_PIN  8   // GPIO8
+    #define DEFAULT_I2C_SCL_PIN  9   // GPIO9
     #define BOARD_NAME           "ESP32-C3 Super Mini"
+#elif defined(BOARD_ESP32_S2)
+    #define DEFAULT_CEC_PIN      4
+    #define DEFAULT_I2C_SDA_PIN  8
+    #define DEFAULT_I2C_SCL_PIN  9
+    #define BOARD_NAME           "ESP32-S2"
+#elif defined(BOARD_ESP32_S3)
+    #define DEFAULT_CEC_PIN      4
+    #define DEFAULT_I2C_SDA_PIN  8
+    #define DEFAULT_I2C_SCL_PIN  9
+    #define BOARD_NAME           "ESP32-S3"
+#elif defined(BOARD_ESP8266)
+    #define DEFAULT_CEC_PIN      14  // D5
+    #define DEFAULT_I2C_SDA_PIN  4   // D2
+    #define DEFAULT_I2C_SCL_PIN  5   // D1
+    #define BOARD_NAME           "ESP8266"
+#elif defined(BOARD_ARDUINO_AVR)
+    #define DEFAULT_CEC_PIN      2   // D2
+    #define DEFAULT_I2C_SDA_PIN  SDA // A4 (Uno/Nano)
+    #define DEFAULT_I2C_SCL_PIN  SCL // A5 (Uno/Nano)
+    #define BOARD_NAME           "Arduino AVR (Uno/Nano)"
+#elif defined(BOARD_RPI_PICO)
+    #define DEFAULT_CEC_PIN      2   // GP2
+    #define DEFAULT_I2C_SDA_PIN  4   // GP4
+    #define DEFAULT_I2C_SCL_PIN  5   // GP5
+    #define BOARD_NAME           "Raspberry Pi Pico"
 #else
-    // Primary Target: Standard ESP32 WROOM (DevKit v1 / 30-pin & 36-pin) - DEFAULT
-    #define DEFAULT_CEC_PIN      4   // GPIO4 (CEC line through 2.7k ohm resistor)
-    #define DEFAULT_I2C_SDA_PIN  21  // GPIO21 (I2C SDA)
-    #define DEFAULT_I2C_SCL_PIN  22  // GPIO22 (I2C SCL)
+    // Primary Target: Standard ESP32 WROOM (DevKit v1) - DEFAULT
+    #define DEFAULT_CEC_PIN      4   // GPIO4
+    #define DEFAULT_I2C_SDA_PIN  21  // GPIO21
+    #define DEFAULT_I2C_SCL_PIN  22  // GPIO22
     #define BOARD_NAME           "ESP32 WROOM DevKit v1"
 #endif
 

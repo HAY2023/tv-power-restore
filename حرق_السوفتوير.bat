@@ -14,14 +14,17 @@ echo     Version / الإصدار: v%VERSION%
 echo ===============================================================================
 echo.
 echo  [1] Auto-detect and Flash (كشف تلقائي وحرق)
-echo  [2] Flash ESP32 WROOM / DevKit v1 (الأساسية)
-echo  [3] Flash ESP32-C3 Super Mini (الصغيرة)
-echo  [4] Read Chip Info / MAC (قراءة بيانات الشريحة)
-echo  [5] Full Chip Erase (مسح ذاكرة الشريحة بالكامل)
-echo  [6] Exit (خروج)
+echo  [2] Flash ESP32 WROOM / DevKit v1
+echo  [3] Flash ESP32-C3 Super Mini
+echo  [4] Flash ESP32-S2
+echo  [5] Flash ESP32-S3
+echo  [6] Flash ESP8266 (NodeMCU / Wemos)
+echo  [7] Read Chip Info / MAC (قراءة بيانات الشريحة)
+echo  [8] Full Chip Erase (مسح ذاكرة الشريحة بالكامل)
+echo  [9] Exit (خروج)
 echo.
 echo ===============================================================================
-set /p "CHOICE=👉 Select an option / اختر رقم العملية [1-6]: "
+set /p "CHOICE=👉 Select an option / اختر رقم العملية [1-9]: "
 
 if "%CHOICE%"=="1" (
     goto AUTO_DETECT_AND_FLASH
@@ -43,17 +46,41 @@ if "%CHOICE%"=="3" (
     goto SELECT_PORT_MENU
 )
 if "%CHOICE%"=="4" (
-    goto READ_CHIP_INFO
+    set "CHIP=esp32s2"
+    set "BOARD_NAME=ESP32-S2"
+    set "BIN_FILE=ESP32_S2_Firmware.bin"
+    set "ALT_BIN=.pio\build\esp32s2\firmware.bin"
+    set "OFFSET=0x0"
+    goto SELECT_PORT_MENU
 )
 if "%CHOICE%"=="5" (
-    goto ERASE_MENU
+    set "CHIP=esp32s3"
+    set "BOARD_NAME=ESP32-S3"
+    set "BIN_FILE=ESP32_S3_Firmware.bin"
+    set "ALT_BIN=.pio\build\esp32s3\firmware.bin"
+    set "OFFSET=0x0"
+    goto SELECT_PORT_MENU
 )
 if "%CHOICE%"=="6" (
+    set "CHIP=esp8266"
+    set "BOARD_NAME=ESP8266"
+    set "BIN_FILE=ESP8266_Firmware.bin"
+    set "ALT_BIN=.pio\build\esp8266\firmware.bin"
+    set "OFFSET=0x0"
+    goto SELECT_PORT_MENU
+)
+if "%CHOICE%"=="7" (
+    goto READ_CHIP_INFO
+)
+if "%CHOICE%"=="8" (
+    goto ERASE_MENU
+)
+if "%CHOICE%"=="9" (
     echo شكراً لاستخدامك الأداة. مع السلامة!
     exit /b
 )
 
-echo ⚠️ اختيار غير صحيح، يرجى إدخال رقم من 1 إلى 6.
+echo ⚠️ اختيار غير صحيح، يرجى إدخال رقم من 1 إلى 9.
 timeout /t 2 >nul
 goto MAIN_MENU
 
@@ -105,11 +132,14 @@ echo ===========================================================================
 echo.
 echo  اختر نوع السوفتوير المناسب لشريحتك:
 echo.
-echo  [1] ESP32 WROOM / DevKit v1 (الأساسية الافتراضية - الأكثر انتشاراً)
-echo  [2] ESP32-C3 Super Mini (الشريحة الصغيرة)
-echo  [3] إلغاء والعودة للقائمة الرئيسية
+echo  [1] ESP32 WROOM / DevKit v1
+echo  [2] ESP32-C3 Super Mini
+echo  [3] ESP32-S2
+echo  [4] ESP32-S3
+echo  [5] ESP8266 (NodeMCU / Wemos)
+echo  [6] Cancel (إلغاء والعودة للقائمة)
 echo.
-set /p "BOARD_SEL=👉 اختر رقم اللوحة [1-3]: "
+set /p "BOARD_SEL=👉 اختر رقم اللوحة / Select Board [1-6]: "
 
 if "%BOARD_SEL%"=="1" (
     set "CHIP=esp32"
@@ -125,6 +155,33 @@ if "%BOARD_SEL%"=="2" (
     set "BOARD_NAME=ESP32-C3 Super Mini"
     set "BIN_FILE=ESP32_C3_Firmware.bin"
     set "ALT_BIN=.pio\build\esp32c3\firmware.bin"
+    set "OFFSET=0x0"
+    set "PORT=%SELECTED_PORT%"
+    goto CHECK_PYTHON
+)
+if "%BOARD_SEL%"=="3" (
+    set "CHIP=esp32s2"
+    set "BOARD_NAME=ESP32-S2"
+    set "BIN_FILE=ESP32_S2_Firmware.bin"
+    set "ALT_BIN=.pio\build\esp32s2\firmware.bin"
+    set "OFFSET=0x0"
+    set "PORT=%SELECTED_PORT%"
+    goto CHECK_PYTHON
+)
+if "%BOARD_SEL%"=="4" (
+    set "CHIP=esp32s3"
+    set "BOARD_NAME=ESP32-S3"
+    set "BIN_FILE=ESP32_S3_Firmware.bin"
+    set "ALT_BIN=.pio\build\esp32s3\firmware.bin"
+    set "OFFSET=0x0"
+    set "PORT=%SELECTED_PORT%"
+    goto CHECK_PYTHON
+)
+if "%BOARD_SEL%"=="5" (
+    set "CHIP=esp8266"
+    set "BOARD_NAME=ESP8266"
+    set "BIN_FILE=ESP8266_Firmware.bin"
+    set "ALT_BIN=.pio\build\esp8266\firmware.bin"
     set "OFFSET=0x0"
     set "PORT=%SELECTED_PORT%"
     goto CHECK_PYTHON

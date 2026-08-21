@@ -30,37 +30,55 @@ jobs:
           python -m pip install --upgrade pip
           pip install platformio esptool
 
-      - name: Build Firmware for ESP32 WROOM (Primary Target)
-        run: |
-          pio run -e esp32dev
+      - name: Build Firmware for ESP32 WROOM
+        run: pio run -e esp32dev
 
-      - name: Build Firmware for ESP32-C3 Super Mini (Secondary Target)
-        run: |
-          pio run -e esp32c3
+      - name: Build Firmware for ESP32-C3
+        run: pio run -e esp32c3
+
+      - name: Build Firmware for ESP32-S2
+        run: pio run -e esp32s2
+
+      - name: Build Firmware for ESP32-S3
+        run: pio run -e esp32s3
+
+      - name: Build Firmware for ESP8266
+        run: pio run -e esp8266
+
+      - name: Build Firmware for Arduino UNO
+        run: pio run -e uno
+
+      - name: Build Firmware for Arduino Nano
+        run: pio run -e nanoatmega328
+
+      - name: Build Firmware for Raspberry Pi Pico
+        run: pio run -e pico
 
       - name: Package Firmware Binaries & Create Merged Flash Files
         run: |
           mkdir -p release_binaries
           
-          # Generate single merged all-in-one binary for ESP32 WROOM (flash at offset 0x0)
-          esptool.py --chip esp32 merge_bin \
-            -o release_binaries/ESP32_WROOM_Firmware.bin \
-            --flash_mode dio \
-            --flash_freq 40m \
-            --flash_size 4MB \
-            0x1000 .pio/build/esp32dev/bootloader.bin \
-            0x8000 .pio/build/esp32dev/partitions.bin \
-            0x10000 .pio/build/esp32dev/firmware.bin
+          # ESP32 WROOM (offset 0x1000 for bootloader)
+          esptool.py --chip esp32 merge_bin -o release_binaries/ESP32_WROOM_Firmware.bin --flash_mode dio --flash_freq 40m --flash_size 4MB 0x1000 .pio/build/esp32dev/bootloader.bin 0x8000 .pio/build/esp32dev/partitions.bin 0x10000 .pio/build/esp32dev/firmware.bin
           
-          # Generate single merged all-in-one binary for ESP32-C3 (flash at offset 0x0)
-          esptool.py --chip esp32c3 merge_bin \
-            -o release_binaries/ESP32_C3_Firmware.bin \
-            --flash_mode dio \
-            --flash_freq 40m \
-            --flash_size 4MB \
-            0x0 .pio/build/esp32c3/bootloader.bin \
-            0x8000 .pio/build/esp32c3/partitions.bin \
-            0x10000 .pio/build/esp32c3/firmware.bin
+          # ESP32-C3 (offset 0x0 for bootloader)
+          esptool.py --chip esp32c3 merge_bin -o release_binaries/ESP32_C3_Firmware.bin --flash_mode dio --flash_freq 40m --flash_size 4MB 0x0 .pio/build/esp32c3/bootloader.bin 0x8000 .pio/build/esp32c3/partitions.bin 0x10000 .pio/build/esp32c3/firmware.bin
+
+          # ESP32-S2 (offset 0x1000 for bootloader)
+          esptool.py --chip esp32s2 merge_bin -o release_binaries/ESP32_S2_Firmware.bin --flash_mode dio --flash_freq 40m --flash_size 4MB 0x1000 .pio/build/esp32s2/bootloader.bin 0x8000 .pio/build/esp32s2/partitions.bin 0x10000 .pio/build/esp32s2/firmware.bin
+
+          # ESP32-S3 (offset 0x0 for bootloader)
+          esptool.py --chip esp32s3 merge_bin -o release_binaries/ESP32_S3_Firmware.bin --flash_mode dio --flash_freq 40m --flash_size 4MB 0x0 .pio/build/esp32s3/bootloader.bin 0x8000 .pio/build/esp32s3/partitions.bin 0x10000 .pio/build/esp32s3/firmware.bin
+
+          # ESP8266 (Single firmware.bin)
+          cp .pio/build/esp8266/firmware.bin release_binaries/ESP8266_Firmware.bin
+
+          # Arduino (Hex files)
+          cp .pio/build/uno/firmware.hex release_binaries/Arduino_Uno_Firmware.hex
+          cp .pio/build/nanoatmega328/firmware.hex release_binaries/Arduino_Nano_Firmware.hex
+
+          # Pico (UF2 file)
+          cp .pio/build/pico/firmware.uf2 release_binaries/RaspberryPi_Pico_Firmware.uf2
 
           # Copy batch scripts for flashing
           cp حرق_السوفتوير.bat release_binaries/
@@ -84,6 +102,12 @@ jobs:
           files: |
             release_binaries/ESP32_WROOM_Firmware.bin
             release_binaries/ESP32_C3_Firmware.bin
+            release_binaries/ESP32_S2_Firmware.bin
+            release_binaries/ESP32_S3_Firmware.bin
+            release_binaries/ESP8266_Firmware.bin
+            release_binaries/Arduino_Uno_Firmware.hex
+            release_binaries/Arduino_Nano_Firmware.hex
+            release_binaries/RaspberryPi_Pico_Firmware.uf2
             release_binaries/حرق_السوفتوير.bat
             release_binaries/flash.bat
           generate_release_notes: true
